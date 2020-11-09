@@ -35,8 +35,8 @@ def prep_data(df):
 
     # almost 45,000 records missing cohort id, and 1 page_viewed, fill all with 0 for now
     df = df.fillna(0)
-    # drop null values from join and 1 page_viewed null
-    #df = df.dropna()
+    # drop where page viewed = /
+    df.drop(df[df['page_viewed'] == '/'].index, inplace = True)
     # change to integer instead of float
     df.cohort_id = df.cohort_id.astype('int')
     #df.user_id = df.user_id.astype('int')
