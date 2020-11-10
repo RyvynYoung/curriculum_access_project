@@ -37,6 +37,15 @@ def prep_data(df):
     df = df.fillna(0)
     # drop where page viewed = /
     df.drop(df[df['page_viewed'] == '/'].index, inplace = True)
+    
+    # split the page viewed column to get program language and lesson
+    program_lesson = df.page_viewed.str.split('/', expand=True)
+    program_lesson = program_lesson.drop(columns=[2, 3, 4, 5, 6, 7])
+    program_lesson.columns = ['lesson', 'sub_lesson']
+    program_lesson['lesson'] = program_lesson.lesson.str.strip('0123456789-!?')
+    program_lesson['lesson'] = program_lesson.lesson.str.strip('.123-!?')
+    df = pd.concat([df, program_lesson], axis=1)
+    df = df.fillna(0)
     # change to integer instead of float
     df.cohort_id = df.cohort_id.astype('int')
     #df.user_id = df.user_id.astype('int')
@@ -50,6 +59,10 @@ def prep_data(df):
     df['day'] = df.index.day
     df['month'] = df.index.month
     df['year'] = df.index.year
+    
+    # add TS versions of start and end dates
+    df['end_date_ts'] = pd.to_datetime(df.end_date)
+    df['start_date_ts'] = pd.to_datetime(df.start_date)
     
     # No outlier removal yet
     # # run operator outlier removal before split because removal is based on domain knowledge
