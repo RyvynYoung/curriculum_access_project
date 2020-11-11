@@ -78,7 +78,6 @@ def prep_data(df):
 
     return df 
 
-#### NOTE: call the above with: train, test, validate = prep_pick_data(df)
 
 def run(df):
     print("Prepare: Cleaning acquired data...")
